@@ -3,13 +3,13 @@
     <p class="pt-5">Welcome to boggle game!!!</p>
     <div class="row">
       <div class="col-md-2 offset-md-5">
-        <form class="text-center pt-3" accept-charset="UTF-8" @submit="showBoard">
+       <!--  <form class="text-center pt-3" accept-charset="UTF-8" @submit="showBoard"> -->
         <div class="form-group mx-sm-3 mt-5 mb-2">
           <label for="name" class="sr-only text-center">Password</label>
           <input type="text" class="form-control" id="name" placeholder="Enter your name" v-model="user_name" required="true">
         </div>
-        <button class="btn btn-primary mb-2 mt-3">Start Game</button>
-      </form>
+        <button class="btn btn-primary mb-2 mt-3" @click="showBoard">Start Game</button>
+      <!-- </form> -->
       </div>
     </div>
   </div>
@@ -29,6 +29,7 @@ export default {
 
   methods: {
     showBoard(){
+      window.location.href = "/board"
     }
   }
 
