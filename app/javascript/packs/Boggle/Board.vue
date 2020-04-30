@@ -6,25 +6,31 @@
         <section class="game">
           <section class="boggle-box">
               <div class="boggle pt-2">
-                  <button>0</button>
-                  <button>1</button>
-                  <button>2</button>
-                  <button>3</button>
-                  <button>4</button>
-                  <button>5</button>
-                  <button>6</button>
-                  <button>7</button>
-                  <button>8</button>
-                  <button>9</button>
-                  <button>10</button>
-                  <button>11</button>
-                  <button>12</button>
-                  <button>13</button>
-                  <button>14</button>
-                  <button>15</button>
+                  <button @click="selectWord">0</button>
+                  <button @click="selectWord">1</button>
+                  <button @click="selectWord">2</button>
+                  <button @click="selectWord">3</button>
+                  <button @click="selectWord">4</button>
+                  <button @click="selectWord">5</button>
+                  <button @click="selectWord">6</button>
+                  <button @click="selectWord">7</button>
+                  <button @click="selectWord">8</button>
+                  <button @click="selectWord">9</button>
+                  <button @click="selectWord">10</button>
+                  <button @click="selectWord">11</button>
+                  <button @click="selectWord">12</button>
+                  <button @click="selectWord">13</button>
+                  <button @click="selectWord">14</button>
+                  <button @click="selectWord">15</button>
               </div>
           </section>
         </section>
+      </div>
+    </div>
+    <div class="row mt-5 ml-5">
+      <div class="col-md-6">
+        <label class="float-left mr-3 mt-1 h-5">New Word: {{ newWord }}</label>
+        <button class="btn btn-primary mb-2 float-left" @click="calculateTotal">Submit</button>
       </div>
     </div>
   </div>
@@ -54,29 +60,46 @@ export default {
               "oottu"
           ],
       diceGrid: '',
-      allDie: ''
+      allButton: '',
+      enteredWord: [],
+      newWord: ''
 
     }
   },
 
   mounted(){
-    this.allDie = document.querySelectorAll('.boggle button');
+    this.allButton = document.querySelectorAll('.boggle button');
     this.diceGrid = document.querySelector('.boggle');
     this.randomizer();
-
   },
 
   methods: {
     randomizer(){
      for( var i=0; i < this.boggle.length; i++){
           // get each die
-          var currentDie = this.boggle[i].split('');
+          var currentButton = this.boggle[i].split('');
           // random die side
           var boggleRoll = Math.floor(Math.random() * 5);
           // set die innerHTML to current charactor
-          this.allDie[i].innerHTML = currentDie[boggleRoll];
+          this.allButton[i].innerHTML = currentButton[boggleRoll];
      };
+    },
+
+    selectWord(event){
+      this.enteredWord.push(event.target.innerHTML)
+      if(this.enteredWord.length > 1){
+        this.newWord = this.enteredWord.join().replace(/,/g, '');
+      }else{
+        this.newWord = this.enteredWord.join();
+      }
+
+    },
+
+    calculateTotal(){
+
     }
+
+
   }
 
 }
