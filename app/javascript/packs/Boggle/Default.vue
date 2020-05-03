@@ -16,6 +16,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data() {
     return {
@@ -29,7 +31,17 @@ export default {
 
   methods: {
     showBoard(){
-      window.location.href = "/board"
+      axios({
+              method: "post",
+              url: '/api/user_details.json',
+              params: { name: this.user_name},
+              withCredentials: false
+            })
+      .then(res => {
+        window.location.href = "/board"
+      })
+      .catch(error => {});
+
     }
   }
 
