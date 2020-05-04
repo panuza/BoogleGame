@@ -2,7 +2,7 @@
   <div id="boggle-app" class="text-center">
     <h1 class="pt-5">Boggle Board</h1>
     <div class="row pt-5 text-center">
-      <div class="col-md-2 offset-md-5">
+      <div class="col-md-4 offset-md-4">
         <section class="game">
           <section class="boggle-box">
               <div class="boggle pt-2">
@@ -27,10 +27,26 @@
         </section>
       </div>
     </div>
-    <div class="row mt-5 ml-5">
-      <div class="col-md-6">
-        <label class="float-left mr-3 mt-1 h-5">New Word: {{ newWord }}</label>
-        <button class="btn btn-primary mb-2 float-left" @click="calculateTotal">Submit</button>
+    <div class="col-md-4 offset-md-4 pt-5 text-center">
+      <div class="row text-center">
+        <strong class="mt-1 h-5 w-100">New Word: {{ newWord }}</strong>
+      </div>
+      <button class="row btn btn-primary my-2" @click="calculateTotal">Submit</button>
+      <div class="row text-center pt-5">
+        <table class="table text-center">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Words</th>
+              <th scope="col">Score</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Otto</td>
+              <td>@mdo</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -38,6 +54,7 @@
 
 <script>
 export default {
+  props: ["userName"],
   data() {
     return {
       user_name: '',
