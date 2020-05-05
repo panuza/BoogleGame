@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   root "boggle#boggle_view"
   get "/test-hello" => "test#test_hello"
 
-  get "/api/user_details" => "api/user_details#index"
   post "/api/user_details" => "api/user_details#create"
   get "/api/user_details/:user_uid" => "api/user_details#show"
+  put "/api/user_details/calculate_total" => "api/user_details#calculate_total"
 end

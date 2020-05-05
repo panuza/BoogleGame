@@ -12,9 +12,9 @@
         </div>
       </div>
     </div>
-    <Board v-if="displayBoard" :userName="userName"></Board>
+    <Board v-if="displayBoard" :userName="userName" :useruid="useruid"></Board>
   </div>
-</template>
+</template>; 
 
 <script>
 import axios from 'axios'
@@ -24,7 +24,8 @@ export default {
   data() {
     return {
       userName: '',
-      displayBoard: false
+      displayBoard: false,
+      useruid: ''
     }
   },
 
@@ -45,8 +46,8 @@ export default {
             })
       .then(res => {
         document.getElementById('boggle-start').style.display= 'none';
+        this.useruid = res.data.user_detail.user_uid
         this.displayBoard = true
-        // window.location.href = "/board"
       })
       .catch(error => {});
 

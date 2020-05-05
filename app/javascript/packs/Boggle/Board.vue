@@ -29,7 +29,8 @@
     </div>
     <div class="col-md-4 offset-md-4 pt-5 text-center">
       <div class="row text-center">
-        <strong class="mt-1 h-5 w-100">New Word: {{ newWord }}</strong>
+        <strong class="mt-1 h-5 w-100">New Word: </strong>
+        <span class="text-center w-100 py-2"> {{ newWord }} </span>
       </div>
       <button class="row btn btn-primary my-2" @click="calculateTotal">Submit</button>
       <div class="row text-center pt-5">
@@ -53,8 +54,10 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-  props: ["userName"],
+  props: ["userName", "useruid"],
   data() {
     return {
       user_name: '',
@@ -79,7 +82,8 @@ export default {
       diceGrid: '',
       allButton: '',
       enteredWord: [],
-      newWord: ''
+      newWord: '',
+      populate_word: ''
 
     }
   },
@@ -113,10 +117,25 @@ export default {
     },
 
     calculateTotal(){
-
+      axios({
+        method: "put",
+        url: '/api/user_details/calculate_total.json',
+        params: { word: this.newWord, useruid: this.useruid},
+        withCredentials: false
+      })
+      .then(res => {
+        if(res.data.user_detail.invalid){
+          alert("Invalid word")
+          this.newWord = ''
+        }else{
+          this.populate_word = this.newWord
+        }
+        // document.getElementById('boggle-start').style.display= 'none';
+        // this.displayBoard = true
+        // window.location.href = "/board"
+      })
+      .catch(error => {});
     }
-
-
   }
 
 }
