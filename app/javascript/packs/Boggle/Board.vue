@@ -42,9 +42,13 @@
             </tr>
           </thead>
           <tbody>
+            <tr v-for="(word, key) in words_array" :key="key">
+              <td>{{word}}</td>
+              <td>{{word.length}}</td>
+            </tr>
             <tr>
-              <td>Otto</td>
-              <td>@mdo</td>
+              <td><strong>Total</strong></td>
+              <td>{{ totalScore }} </td>
             </tr>
           </tbody>
         </table>
@@ -83,7 +87,8 @@ export default {
       allButton: '',
       enteredWord: [],
       newWord: '',
-      populate_word: ''
+      words_array: [],
+      totalScore: 0
 
     }
   },
@@ -117,6 +122,7 @@ export default {
     },
 
     calculateTotal(){
+      this.enteredWord = []
       axios({
         method: "put",
         url: '/api/user_details/calculate_total.json',
@@ -124,15 +130,15 @@ export default {
         withCredentials: false
       })
       .then(res => {
+        debugger
         if(res.data.user_detail.invalid){
           alert("Invalid word")
-          this.newWord = ''
         }else{
-          this.populate_word = this.newWord
+          debugger
+          this.words_array.push(this.newWord)
+          this.totalScore = res.data.user_detail.score
         }
-        // document.getElementById('boggle-start').style.display= 'none';
-        // this.displayBoard = true
-        // window.location.href = "/board"
+          this.newWord = ''
       })
       .catch(error => {});
     }

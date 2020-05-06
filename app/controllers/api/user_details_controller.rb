@@ -25,10 +25,10 @@ class Api::UserDetailsController < ApplicationController
   end
 
   def user_details_params
-          params.require(:user_detail).permit(
-            :name,
-            :user_uid,
-            :score
-          )
-        end
+    params.require(:user_detail).permit(
+      :name,
+      :user_uid,
+      :score
+    )
+  end
 end
