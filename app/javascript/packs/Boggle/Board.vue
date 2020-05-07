@@ -130,13 +130,11 @@ export default {
         withCredentials: false
       })
       .then(res => {
-        debugger
-        if(res.data.user_detail.invalid){
+        if(this.totalScore >= res.data.user_detail.score){
           alert("Invalid word")
         }else{
-          debugger
-          this.words_array.push(this.newWord)
           this.totalScore = res.data.user_detail.score
+          this.words_array.push(this.newWord)
         }
           this.newWord = ''
       })
