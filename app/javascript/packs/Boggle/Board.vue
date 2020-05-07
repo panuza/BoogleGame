@@ -1,6 +1,15 @@
 <template>
   <div id="boggle-app" class="text-center">
-    <h1 class="pt-5">Boggle Board</h1>
+    <div class="mr-5" style="position: absolute; left: 80%; top: 10%;">
+      <h5 class="blinking">Total time  Remaining</h5>
+      <h2 id="timer" style="color: red;"></h2>
+    </div>
+    <div class="mr-5" style="position: absolute; right: 80%; top: 10%;">
+      <button class="btn btn-danger" @click="startGame">New Game</button>
+    </div>
+    <h5 class="pt-5">Hi {{ userName }}</h5>
+    <p>Click the letters on the box to make a word.</p>
+
     <div class="row pt-5 text-center">
       <div class="col-md-4 offset-md-4">
         <section class="game">
@@ -54,6 +63,25 @@
         </table>
       </div>
     </div>
+    <div id="final-modal"  style="display: none;">
+    <transition name="modal is-larger" >
+      <div class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-container">
+            <div class="pt-3">
+              <span class="row align-center">
+                <h2 class="font-roboto-15 pl-2 py-2 text-center">GAME OVER!!!!!!!!!</h2>
+              </span>
+              <p class="font-roboto-15 pl-2 py-2 align-center">Your total score is {{ totalScore }}</p>
+              <span class="row mt-5" style="justify-content: center;">
+                <button class="btn btn-danger" @click="startGame">OK</button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+  </div>
   </div>
 </template>
 
@@ -89,17 +117,40 @@ export default {
       newWord: '',
       words_array: [],
       totalScore: 0
-
     }
   },
 
   mounted(){
+    var seconds=30;
+    var timer;
+    function myFunction() {
+      if(seconds < 30) { // I want it to say 1:00, not 60
+        document.getElementById("timer").innerHTML = seconds + "s";
+      }
+      if (seconds >0 ) { // so it doesn't go to -1
+         seconds--;
+      } else {
+        clearInterval(timer);
+        document.getElementById("final-modal").style.display="block"; 
+      }
+    }
+      if(!timer) {
+        timer = window.setInterval(function() { 
+          myFunction();
+        }, 1000); // every second
+      }
+    document.getElementById("timer").innerHTML="30s"; 
+
     this.allButton = document.querySelectorAll('.boggle button');
     this.diceGrid = document.querySelector('.boggle');
     this.randomizer();
   },
 
   methods: {
+    startGame(){
+      window.location.reload();
+    },
+
     randomizer(){
      for( var i=0; i < this.boggle.length; i++){
           // get each die
@@ -123,29 +174,41 @@ export default {
 
     calculateTotal(){
       this.enteredWord = []
-      axios({
-        method: "put",
-        url: '/api/user_details/calculate_total.json',
-        params: { word: this.newWord, useruid: this.useruid},
-        withCredentials: false
-      })
-      .then(res => {
-        if(this.totalScore >= res.data.user_detail.score){
-          alert("Invalid word")
-        }else{
-          this.totalScore = res.data.user_detail.score
-          this.words_array.push(this.newWord)
-        }
-          this.newWord = ''
-      })
-      .catch(error => {});
+      if(this.newWord.length > 1){
+        axios({
+          method: "put",
+          url: '/api/user_details/calculate_total.json',
+          params: { word: this.newWord, useruid: this.useruid},
+          withCredentials: false
+        })
+        .then(res => {
+          if(this.totalScore >= res.data.user_detail.score){
+            alert("Invalid word")
+          }else{
+            this.totalScore = res.data.user_detail.score
+            this.words_array.push(this.newWord)
+          }
+            this.newWord = ''
+        })
+        .catch(error => {});
+      }
+      else{
+        alert("Word must contain at least two letters")
+      }
     }
-  }
+  },
+
 
 }
 </script>
 
 <style scoped>
+  .align-center{
+    justify-content: center;
+  }
+  .text-center{
+    text-align: center;
+  }
   .boggle button {
   height: 50px;
   width: 50px;
@@ -175,4 +238,65 @@ export default {
     margin: 0 auto;
     background-color: green;
 }
+
+.blinking{
+    animation:blinkingText 1.5s infinite;
+}
+@keyframes blinkingText{
+    0%{     color: #ffbc00;    }
+    49%{    color: #ffbc00; }
+    60%{    color: transparent; }
+    99%{    color:transparent;  }
+    100%{   color: #ffbc00;    }
+}
+
+.modal-mask {
+    position: fixed;
+    z-index: 9998;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(30, 28, 63, 0.7);    /* To change the opacity background*/
+    display: table;
+    transition: opacity .3s ease;
+  }
+
+  .modal-wrapper {
+    display: table-cell;
+    vertical-align: middle;
+  }
+
+  .modal-container {
+    width: 600px;
+    height: 250px;
+    margin: 0px auto;
+    padding: 20px 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .33);
+    transition: all .3s ease;
+    font-family: Helvetica, Arial, sans-serif;
+  }
+  .modal-header{
+    display: block!important;
+  }
+  .modal-header h3 {
+    margin-top: 0;
+    color: #42b983;
+  }
+
+  .modal-enter {
+    opacity: 0;
+  }
+
+  .modal-leave-active {
+    opacity: 0;
+  }
+
+  .modal-enter .modal-container,
+  .modal-leave-active .modal-container {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+  }
 </style>
