@@ -4,7 +4,11 @@
       <h5 class="blinking">Total time  Remaining</h5>
       <h2 id="timer" style="color: red;"></h2>
     </div>
-    <h1 class="pt-5">Boggle Board</h1>
+    <div class="mr-5" style="position: absolute; right: 80%; top: 10%;">
+      <button class="btn btn-danger" @click="startGame">New Game</button>
+    </div>
+    <h5 class="pt-5">Hi {{ userName }}</h5>
+    <p>Click the letters on the box to make a word.</p>
 
     <div class="row pt-5 text-center">
       <div class="col-md-4 offset-md-4">
@@ -117,11 +121,11 @@ export default {
   },
 
   mounted(){
-    var seconds=60;
+    var seconds=30;
     var timer;
     function myFunction() {
-      if(seconds < 60) { // I want it to say 1:00, not 60
-        document.getElementById("timer").innerHTML = seconds;
+      if(seconds < 30) { // I want it to say 1:00, not 60
+        document.getElementById("timer").innerHTML = seconds + "s";
       }
       if (seconds >0 ) { // so it doesn't go to -1
          seconds--;
@@ -135,8 +139,7 @@ export default {
           myFunction();
         }, 1000); // every second
       }
-    document.getElementById("timer").innerHTML="1:00"; 
-
+    document.getElementById("timer").innerHTML="30s"; 
 
     this.allButton = document.querySelectorAll('.boggle button');
     this.diceGrid = document.querySelector('.boggle');
@@ -171,22 +174,27 @@ export default {
 
     calculateTotal(){
       this.enteredWord = []
-      axios({
-        method: "put",
-        url: '/api/user_details/calculate_total.json',
-        params: { word: this.newWord, useruid: this.useruid},
-        withCredentials: false
-      })
-      .then(res => {
-        if(this.totalScore >= res.data.user_detail.score){
-          alert("Invalid word")
-        }else{
-          this.totalScore = res.data.user_detail.score
-          this.words_array.push(this.newWord)
-        }
-          this.newWord = ''
-      })
-      .catch(error => {});
+      if(this.newWord.length > 1){
+        axios({
+          method: "put",
+          url: '/api/user_details/calculate_total.json',
+          params: { word: this.newWord, useruid: this.useruid},
+          withCredentials: false
+        })
+        .then(res => {
+          if(this.totalScore >= res.data.user_detail.score){
+            alert("Invalid word")
+          }else{
+            this.totalScore = res.data.user_detail.score
+            this.words_array.push(this.newWord)
+          }
+            this.newWord = ''
+        })
+        .catch(error => {});
+      }
+      else{
+        alert("Word must contain at least two letters")
+      }
     }
   },
 
