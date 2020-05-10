@@ -15,8 +15,8 @@
             <p id="time" style="color: red;"></p> 
           </div>
         </div>
-        <section class="game">
-          <section class="boggle-box">
+        <div class="game">
+          <div class="boggle-box">
               <div class="boggle pt-2">
                   <button rowId = "0" colId = "0" @click="selectWord" :disabled="active">0</button>
                   <button rowId = "0" colId = "1" @click="selectWord" :disabled="active">1</button>
@@ -35,8 +35,8 @@
                   <button rowId = "3" colId = "2" @click="selectWord" :disabled="active">14</button>
                   <button rowId = "3" colId = "3" @click="selectWord" :disabled="active">15</button>
               </div>
-          </section>
-        </section>
+          </div>
+        </div>
       </div>
     </div>
     <div class="col-md-4 offset-md-4 pt-5 text-center">
@@ -257,7 +257,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
   .align-center{
     justify-content: center;
   }
