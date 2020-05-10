@@ -133,15 +133,15 @@ export default {
          seconds--;
       } else {
         clearInterval(timer);
-        document.getElementById("final-modal").style.display="block"; 
+        document.getElementById("final-modal").style.display="block";
       }
     }
       if(!timer) {
-        timer = window.setInterval(function() { 
+        timer = window.setInterval(function() {
           myFunction();
         }, 1000); // every second
       }
-    document.getElementById("timer").innerHTML="30s"; 
+    document.getElementById("timer").innerHTML="30s";
 
     this.allButton = document.querySelectorAll('.boggle button');
     this.diceGrid = document.querySelector('.boggle');
