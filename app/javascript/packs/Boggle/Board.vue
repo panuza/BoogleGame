@@ -15,22 +15,22 @@
         <section class="game">
           <section class="boggle-box">
               <div class="boggle pt-2">
-                  <button @click="selectWord">0</button>
-                  <button @click="selectWord">1</button>
-                  <button @click="selectWord">2</button>
-                  <button @click="selectWord">3</button>
-                  <button @click="selectWord">4</button>
-                  <button @click="selectWord">5</button>
-                  <button @click="selectWord">6</button>
-                  <button @click="selectWord">7</button>
-                  <button @click="selectWord">8</button>
-                  <button @click="selectWord">9</button>
-                  <button @click="selectWord">10</button>
-                  <button @click="selectWord">11</button>
-                  <button @click="selectWord">12</button>
-                  <button @click="selectWord">13</button>
-                  <button @click="selectWord">14</button>
-                  <button @click="selectWord">15</button>
+                  <button rowId = "0" colId = "0" @click="selectWord" :disabled="active">0</button>
+                  <button rowId = "0" colId = "1" @click="selectWord" :disabled="active">1</button>
+                  <button rowId = "0" colId = "2" @click="selectWord" :disabled="active">2</button>
+                  <button rowId = "0" colId = "3" @click="selectWord" :disabled="active">3</button>
+                  <button rowId = "1" colId = "0" @click="selectWord" :disabled="active">4</button>
+                  <button rowId = "1" colId = "1" @click="selectWord" :disabled="active">5</button>
+                  <button rowId = "1" colId = "2" @click="selectWord" :disabled="active">6</button>
+                  <button rowId = "1" colId = "3" @click="selectWord" :disabled="active">7</button>
+                  <button rowId = "2" colId = "0" @click="selectWord" :disabled="active">8</button>
+                  <button rowId = "2" colId = "1" @click="selectWord" :disabled="active">9</button>
+                  <button rowId = "2" colId = "2" @click="selectWord" :disabled="active">10</button>
+                  <button rowId = "2" colId = "3" @click="selectWord" :disabled="active">11</button>
+                  <button rowId = "3" colId = "0" @click="selectWord" :disabled="active">12</button>
+                  <button rowId = "3" colId = "1" @click="selectWord" :disabled="active">13</button>
+                  <button rowId = "3" colId = "2" @click="selectWord" :disabled="active">14</button>
+                  <button rowId = "3" colId = "3" @click="selectWord" :disabled="active">15</button>
               </div>
           </section>
         </section>
@@ -116,7 +116,9 @@ export default {
       enteredWord: [],
       newWord: '',
       words_array: [],
-      totalScore: 0
+      totalScore: 0,
+      clicked: false,
+      active: false
     }
   },
 
@@ -163,6 +165,22 @@ export default {
     },
 
     selectWord(event){
+      var currentRowVal = event.currentTarget.attributes.rowid.value
+      var currentColVal = event.currentTarget.attributes.colid.value
+
+      for( var i=0; i < this.boggle.length; i++){
+        var rowVal = this.allButton[i].attributes.rowid.value
+        var colVal = this.allButton[i].attributes.colid.value
+
+        var colDiff = Math.abs(currentRowVal - rowVal);
+        var rowDiff = Math.abs(currentColVal - colVal);
+        if (colDiff <= 1 && rowDiff <= 1) {
+          this.allButton[i].disabled = false
+          event.currentTarget.style.backgroundColor = "#acceec"
+        } else {
+          this.allButton[i].disabled = true
+        }
+      }
       this.enteredWord.push(event.target.innerHTML)
       if(this.enteredWord.length > 1){
         this.newWord = this.enteredWord.join().replace(/,/g, '');
@@ -173,6 +191,10 @@ export default {
     },
 
     calculateTotal(){
+      for( var i=0; i < this.boggle.length; i++){
+        this.allButton[i].style.backgroundColor="#ffffff"
+        this.allButton[i].disabled = false
+      }
       this.enteredWord = []
       if(this.newWord.length > 1){
         axios({
@@ -182,6 +204,7 @@ export default {
           withCredentials: false
         })
         .then(res => {
+
           if(this.totalScore >= res.data.user_detail.score){
             alert("Invalid word")
           }else{
