@@ -252,7 +252,7 @@ DEPENDENCIES
   pry-rails
   puma (~> 3.11)
   rabl
-  rails (~> 5.2.4, >= 5.2.4.2)
+  rails
   rspec-rails (~> 3.5)
   sass-rails (~> 5.0)
   selenium-webdriver
