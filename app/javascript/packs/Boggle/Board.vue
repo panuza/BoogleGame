@@ -1,13 +1,13 @@
 <template>
   <div id="boggle-app" class="text-center">
-    <div class="mr-5" style="position: absolute; left: 80%; top: 10%;">
-      <h5 class="blinking">Total time  Remaining</h5>
-      <h2 id="timer" style="color: red;"></h2>
+    <div class="mr-5" id="stop-time" style="position: absolute; left: 80%; top: 10%;">
+      <h5 >Total time  Remaining</h5>
+      <h2 id="time" style="color: red;"></h2>
     </div>
     <div class="mr-5" style="position: absolute; right: 80%; top: 10%;">
       <button class="btn btn-danger" @click="startGame">New Game</button>
     </div>
-    <h5 class="pt-5">Hi {{ userName }}</h5>
+    <h5 class="pt-5">Player {{ userName }}</h5>
     <p>Click the letters on the box to make a word.</p>
 
     <div class="row pt-5 text-center">
@@ -118,30 +118,16 @@ export default {
       words_array: [],
       totalScore: 0,
       clicked: false,
-      active: false
+      active: false,
+      prevElementRow: '',
+      prevElementCol: ''
     }
   },
 
   mounted(){
-    var seconds=30;
-    var timer;
-    function myFunction() {
-      if(seconds < 30) { // I want it to say 1:00, not 60
-        document.getElementById("timer").innerHTML = seconds + "s";
-      }
-      if (seconds >0 ) { // so it doesn't go to -1
-         seconds--;
-      } else {
-        clearInterval(timer);
-        document.getElementById("final-modal").style.display="block";
-      }
-    }
-      if(!timer) {
-        timer = window.setInterval(function() {
-          myFunction();
-        }, 1000); // every second
-      }
-    document.getElementById("timer").innerHTML="30s";
+    var timeLeft = 60 * 3,
+    display = document.querySelector('#time');
+    this.startTimer(timeLeft, display);
 
     this.allButton = document.querySelectorAll('.boggle button');
     this.diceGrid = document.querySelector('.boggle');
@@ -149,6 +135,37 @@ export default {
   },
 
   methods: {
+
+    startTimer(duration, display) {
+      var start = Date.now(),
+          diff,
+          hours,
+          minutes,
+          seconds;
+
+      function timer() {
+          diff = duration - (((Date.now() - start) / 1000) | 0);
+          hours = (diff / 3600) | 0;
+          minutes = ((diff % 3600)/60) | 0;
+          seconds = (diff % 60) | 0;
+
+          hours = hours < 10 ? "0" + hours : hours;
+          minutes = minutes < 10 ? "0" + minutes : minutes;
+          seconds = seconds < 10 ? "0" + seconds : seconds;
+
+          display.textContent = hours + ":" + minutes + ":" + seconds;
+
+          if (diff <= 0) {
+              // start = Date.now() + 1000;
+            clearInterval(timer, 0);
+            document.getElementById("stop-time").style.display="none";
+            document.getElementById("final-modal").style.display="block";
+          }
+      };
+      timer();
+      setInterval(timer, 1000);
+  },
+
     startGame(){
       window.location.reload();
     },
@@ -168,17 +185,22 @@ export default {
       var currentRowVal = event.currentTarget.attributes.rowid.value
       var currentColVal = event.currentTarget.attributes.colid.value
 
-      for( var i=0; i < this.boggle.length; i++){
-        var rowVal = this.allButton[i].attributes.rowid.value
-        var colVal = this.allButton[i].attributes.colid.value
+      if(currentRowVal == parseInt(this.prevElementRow) && currentColVal == parseInt(this.prevElementCol)){
+        return true
+      }
+      else{
+        for( var i=0; i < this.boggle.length; i++){
+          var rowVal = this.allButton[i].attributes.rowid.value
+          var colVal = this.allButton[i].attributes.colid.value
 
-        var colDiff = Math.abs(currentRowVal - rowVal);
-        var rowDiff = Math.abs(currentColVal - colVal);
-        if (colDiff <= 1 && rowDiff <= 1) {
-          this.allButton[i].disabled = false
-          event.currentTarget.style.backgroundColor = "#acceec"
-        } else {
-          this.allButton[i].disabled = true
+          var colDiff = Math.abs(currentRowVal - rowVal);
+          var rowDiff = Math.abs(currentColVal - colVal);
+          if (colDiff <= 1 && rowDiff <= 1) {
+            this.allButton[i].disabled = false
+            event.currentTarget.style.backgroundColor = "#acceec"
+          } else {
+            this.allButton[i].disabled = true
+          }
         }
       }
       this.enteredWord.push(event.target.innerHTML)
@@ -188,35 +210,43 @@ export default {
         this.newWord = this.enteredWord.join();
       }
 
+      this.prevElementRow = currentRowVal
+      this.prevElementCol = currentColVal
+
     },
 
     calculateTotal(){
+      this.enteredWord = []
       for( var i=0; i < this.boggle.length; i++){
         this.allButton[i].style.backgroundColor="#ffffff"
         this.allButton[i].disabled = false
       }
-      this.enteredWord = []
-      if(this.newWord.length > 1){
-        axios({
-          method: "put",
-          url: '/api/user_details/calculate_total.json',
-          params: { word: this.newWord, useruid: this.useruid},
-          withCredentials: false
-        })
-        .then(res => {
-
-          if(this.totalScore >= res.data.user_detail.score){
-            alert("Invalid word")
-          }else{
-            this.totalScore = res.data.user_detail.score
-            this.words_array.push(this.newWord)
-          }
-            this.newWord = ''
-        })
-        .catch(error => {});
+      if(this.words_array.includes(this.newWord)){
+        alert("Word already taken...")
+        this.newWord = ''
       }
       else{
-        alert("Word must contain at least two letters")
+        if(this.newWord.length > 1){
+          axios({
+            method: "put",
+            url: '/api/user_details/calculate_total.json',
+            params: { word: this.newWord, useruid: this.useruid},
+            withCredentials: false
+          })
+          .then(res => {
+            if(this.totalScore >= res.data.user_detail.score){
+              alert("Invalid word")
+            }else{
+              this.totalScore = res.data.user_detail.score
+              this.words_array.push(this.newWord)
+            }
+              this.newWord = ''
+          })
+          .catch(error => {});
+        }
+        else{
+          alert("Word must contain at least two letters")
+        }
       }
     }
   },

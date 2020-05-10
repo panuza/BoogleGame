@@ -19,7 +19,7 @@ class CheckWordService
     request["x-rapidapi-key"] = '28b2e64f23mshad6bd563cf37710p119064jsn5f7e910fb223'
     response = http.request(request)
     response_body = JSON.parse(response.read_body)
-    response_body['list'].count.positive? ? true : false
+    response_body['list'].count.positive?
   end
 
   private
