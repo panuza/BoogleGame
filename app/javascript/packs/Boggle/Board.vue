@@ -1,17 +1,20 @@
 <template>
   <div id="boggle-app" class="text-center">
     <div class="mr-5" id="stop-time" style="position: absolute; left: 80%; top: 10%;">
-      <h5 >Total time  Remaining</h5>
-      <h2 id="time" style="color: red;"></h2>
+      <button class="btn btn-danger" @click="startGame">Quit Game</button>
     </div>
-    <div class="mr-5" style="position: absolute; right: 80%; top: 10%;">
-      <button class="btn btn-danger" @click="startGame">New Game</button>
-    </div>
-    <h5 class="pt-5">Player {{ userName }}</h5>
-    <p>Click the letters on the box to make a word.</p>
-
-    <div class="row pt-5 text-center">
+    <div class="row pt-3 text-center">
       <div class="col-md-4 offset-md-4">
+        <div class="row">
+          <div class="col-md-6 text-left">
+            <h6 class="">Player: </h6>
+            <p>{{ userName }}</p>
+          </div>
+          <div class="col-md-6 text-right" id="stop-time">
+            <h6 >Total time  Remaining</h6>
+            <p id="time" style="color: red;"></p> 
+          </div>
+        </div>
         <section class="game">
           <section class="boggle-box">
               <div class="boggle pt-2">
@@ -41,7 +44,7 @@
         <strong class="mt-1 h-5 w-100">New Word: </strong>
         <span class="text-center w-100 py-2"> {{ newWord }} </span>
       </div>
-      <button class="row btn btn-primary my-2" @click="calculateTotal">Submit</button>
+      <button class="row btn btn-success my-2" @click="calculateTotal">Submit</button>
       <div class="row text-center pt-5">
         <table class="table text-center">
           <thead class="thead-dark">
@@ -51,14 +54,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(word, key) in words_array" :key="key">
-              <td>{{word}}</td>
-              <td>{{word.length}}</td>
-            </tr>
-            <tr>
-              <td><strong>Total</strong></td>
-              <td>{{ totalScore }} </td>
-            </tr>
+              <tr v-for="(word, key) in words_array" :key="key">
+                <td>{{word}}</td>
+                <td>{{word.length}}</td>
+              </tr>
+              <tr>
+                <td><strong>Total</strong></td>
+                <td><strong>{{ totalScore }}</strong></td>
+              </tr>
           </tbody>
         </table>
       </div>
@@ -225,7 +228,7 @@ export default {
         this.newWord = ''
       }
       else{
-        if(this.newWord.length > 1){
+        if(this.newWord.length > 2){
           axios({
             method: "put",
             url: '/api/user_details/calculate_total.json',
@@ -244,7 +247,7 @@ export default {
           .catch(error => {});
         }
         else{
-          alert("Word must contain at least two letters")
+          alert("Word must contain at least three letters")
         }
       }
     }
