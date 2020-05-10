@@ -12,29 +12,23 @@ Rails 5.2.4.2
 
 Node : v10.15.3
 
-npm : 6.4.1 or Yarn: 1.15.2
+Yarn: 1.15.2
 
 Vue JS 3.8.4
 
 ## To start Game
 
-You need to have bundler installed in your system.
-
-Step 1: You can install it by typing:
-
-Run `gem install bundler`
-
-Step 2: Install all the related package.
+Step 1: Install all the related package.
 
 Open of a terminal window in the root of the project /gameboggle and type :
 
 Run `bundle install`
 
-Step 3: Install the necessary node packages:
+Step 2: Install the necessary node packages:
 
 Run `yarn install`
 
-Step 4: Run the server:
+Step 3: Run the server:
 
 Run `rails server`
 
@@ -53,3 +47,4 @@ Run `bundle exec rspec`
 Run `yarn run jest` to run javscript test
 
 Run `yarn run jest -- u` to update snapshot
+
