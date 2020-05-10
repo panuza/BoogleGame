@@ -1,6 +1,5 @@
 class Api::UserDetailsController < ApplicationController
   skip_before_action :verify_authenticity_token
-  include BoggleHelper
 
   def show
     @user_detail = UserDetail.find_by_user_uid(params[:user_uid])
@@ -15,8 +14,8 @@ class Api::UserDetailsController < ApplicationController
 
   def calculate_total
     @user_detail = UserDetail.find_by_user_uid(params[:useruid])
-
-    if valid_words.include? params[:word]
+    valid_word = CheckWordService.call(word: params[:word]).valid?
+    if valid_word
       word_length = params[:word].length
       @user_detail.update_attribute(:score, @user_detail.score + word_length)
     else
