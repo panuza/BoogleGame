@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Default renders correctly 1`] = `
+<div
+  class="text-center"
+  id="boggle-app"
+>
+  <div
+    id="boggle-start"
+  >
+    <p
+      class="pt-5"
+    >
+      Welcome to boggle game!!!
+    </p>
+     
+    <div
+      class="row"
+    >
+      <div
+        class="col-md-2 offset-md-5"
+      >
+        <div
+          class="form-group mx-sm-3 mt-5 mb-2"
+        >
+          <label
+            class="sr-only text-center"
+            for="name"
+          >
+            Password
+          </label>
+           
+          <input
+            class="form-control"
+            id="name"
+            placeholder="Enter your name"
+            required="required"
+            type="text"
+          />
+        </div>
+         
+        <button
+          class="btn btn-primary mb-2 mt-3"
+        >
+          Start Game
+        </button>
+      </div>
+    </div>
+  </div>
+   
+  <!---->
+</div>
+`;

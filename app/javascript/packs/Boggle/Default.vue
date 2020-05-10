@@ -14,7 +14,7 @@
     </div>
     <Board v-if="displayBoard" :userName="userName" :useruid="useruid"></Board>
   </div>
-</template>; 
+</template>;
 
 <script>
 import axios from 'axios'
