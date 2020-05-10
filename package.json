@@ -10,6 +10,15 @@
     "vue-turbolinks": "^2.1.0"
   },
   "devDependencies": {
+    "jest": "^26.0.1",
     "webpack-dev-server": "^3.10.3"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "roots": [
+      "spec/javascript"
+    ]
   }
 }
