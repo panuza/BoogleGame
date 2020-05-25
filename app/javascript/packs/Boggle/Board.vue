@@ -18,22 +18,22 @@
         <div class="game">
           <div class="boggle-box">
               <div class="boggle pt-2">
-                  <button rowId = "0" colId = "0" @click="selectWord" :disabled="active">0</button>
-                  <button rowId = "0" colId = "1" @click="selectWord" :disabled="active">1</button>
-                  <button rowId = "0" colId = "2" @click="selectWord" :disabled="active">2</button>
-                  <button rowId = "0" colId = "3" @click="selectWord" :disabled="active">3</button>
-                  <button rowId = "1" colId = "0" @click="selectWord" :disabled="active">4</button>
-                  <button rowId = "1" colId = "1" @click="selectWord" :disabled="active">5</button>
-                  <button rowId = "1" colId = "2" @click="selectWord" :disabled="active">6</button>
-                  <button rowId = "1" colId = "3" @click="selectWord" :disabled="active">7</button>
-                  <button rowId = "2" colId = "0" @click="selectWord" :disabled="active">8</button>
-                  <button rowId = "2" colId = "1" @click="selectWord" :disabled="active">9</button>
-                  <button rowId = "2" colId = "2" @click="selectWord" :disabled="active">10</button>
-                  <button rowId = "2" colId = "3" @click="selectWord" :disabled="active">11</button>
-                  <button rowId = "3" colId = "0" @click="selectWord" :disabled="active">12</button>
-                  <button rowId = "3" colId = "1" @click="selectWord" :disabled="active">13</button>
-                  <button rowId = "3" colId = "2" @click="selectWord" :disabled="active">14</button>
-                  <button rowId = "3" colId = "3" @click="selectWord" :disabled="active">15</button>
+                  <button id = "btn-0" rowId = "0" colId = "0" @click="selectWord" :disabled="active">0</button>
+                  <button id = "btn-1" rowId = "0" colId = "1" @click="selectWord" :disabled="active">1</button>
+                  <button id = "btn-2" rowId = "0" colId = "2" @click="selectWord" :disabled="active">2</button>
+                  <button id = "btn-3" rowId = "0" colId = "3" @click="selectWord" :disabled="active">3</button>
+                  <button id = "btn-4" rowId = "1" colId = "0" @click="selectWord" :disabled="active">4</button>
+                  <button id = "btn-5" rowId = "1" colId = "1" @click="selectWord" :disabled="active">5</button>
+                  <button id = "btn-6" rowId = "1" colId = "2" @click="selectWord" :disabled="active">6</button>
+                  <button id = "btn-7" rowId = "1" colId = "3" @click="selectWord" :disabled="active">7</button>
+                  <button id = "btn-8" rowId = "2" colId = "0" @click="selectWord" :disabled="active">8</button>
+                  <button id = "btn-9" rowId = "2" colId = "1" @click="selectWord" :disabled="active">9</button>
+                  <button id = "btn-10" rowId = "2" colId = "2" @click="selectWord" :disabled="active">10</button>
+                  <button id = "btn-11"rowId = "2" colId = "3" @click="selectWord" :disabled="active">11</button>
+                  <button id = "btn-12" rowId = "3" colId = "0" @click="selectWord" :disabled="active">12</button>
+                  <button id = "btn-13" rowId = "3" colId = "1" @click="selectWord" :disabled="active">13</button>
+                  <button id = "btn-14" rowId = "3" colId = "2" @click="selectWord" :disabled="active">14</button>
+                  <button id = "btn-15" rowId = "3" colId = "3" @click="selectWord" :disabled="active">15</button>
               </div>
           </div>
         </div>
@@ -122,8 +122,9 @@ export default {
       totalScore: 0,
       clicked: false,
       active: false,
-      prevElementRow: '',
-      prevElementCol: ''
+      prevElementRow: "",
+      prevElementCol: "",
+      temp: []
     }
   },
 
@@ -186,7 +187,7 @@ export default {
     selectWord(event){
       var currentRowVal = event.currentTarget.attributes.rowid.value
       var currentColVal = event.currentTarget.attributes.colid.value
-
+      this.temp.push(event.currentTarget.id)
       if(currentRowVal == parseInt(this.prevElementRow) && currentColVal == parseInt(this.prevElementCol)){
         return true
       }
@@ -198,8 +199,12 @@ export default {
           var colDiff = Math.abs(currentRowVal - rowVal);
           var rowDiff = Math.abs(currentColVal - colVal);
           if (colDiff <= 1 && rowDiff <= 1) {
-            this.allButton[i].disabled = false
-            event.currentTarget.style.backgroundColor = "#acceec"
+            if(this.temp.includes(this.allButton[i].id)){
+              this.allButton[i].disabled = true
+            }else{
+              this.allButton[i].disabled = false
+              event.currentTarget.style.backgroundColor = "#acceec"
+            }
           } else {
             this.allButton[i].disabled = true
           }
@@ -214,7 +219,6 @@ export default {
 
       this.prevElementRow = currentRowVal
       this.prevElementCol = currentColVal
-
     },
 
     calculateTotal(){
